@@ -4,7 +4,6 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, Permission
 
 
-
 class MyUserManager(UserManager):
     def create_user(self, username, email=None, password=None, **extra_fields):
         return super().create_user(username, email, password, **extra_fields)
@@ -15,14 +14,12 @@ class MyUserManager(UserManager):
 
 
 class User(AbstractUser):
-    USER_TYPE = [
-        ('e', 'Employee'),
-        ('t', 'Technical_manager'),
-        ('m', 'Manager'),
-    ]
-    role = models.CharField(max_length=1, choices=USER_TYPE)
+    CHOICES = [('E', 'Employee'),
+               ('T', 'Technical manager'),
+               ('M', 'Manager')]
     groups = models.ManyToManyField(Group, related_name='users', db_index=True, blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name='users', db_index=True, blank=True)
+    role = models.CharField(max_length=1, choices=CHOICES)
 
     objects = MyUserManager()
     USERNAME_FIELD = 'username'
