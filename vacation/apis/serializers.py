@@ -51,14 +51,14 @@ class VacationResponseSerializer(serializers.ModelSerializer):
                         vacation.save()
                         srz_data = VacationForVacationResponseSerializer(instance=vacation)
                         return srz_data.data
-
-                node_connection = NodeConnection.objects.get(from_node=node)
-                vacation_response = VacationResponse.objects.create(vacation=obj.vacation,
-                                                                    node=node_connection.to_node,
-                                                                    status='P'
-                                                                    )
-                data = VacationResponseForVacationSerializer(vacation_response).data
-                return data
+                else:
+                    node_connection = NodeConnection.objects.get(from_node=node)
+                    vacation_response = VacationResponse.objects.create(vacation=obj.vacation,
+                                                                        node=node_connection.to_node,
+                                                                        status='P'
+                                                                        )
+                    data = VacationResponseForVacationSerializer(vacation_response).data
+                    return data
         raise ValidationError('this vacation has been answered before')
 
 
