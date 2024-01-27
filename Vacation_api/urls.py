@@ -22,6 +22,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include('node.apis.urls')),
     path('api/', include('vacation.apis.urls')),
+    path('api/user/', include('user.apis.urls'))
 
 
 ]
