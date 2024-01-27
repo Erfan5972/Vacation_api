@@ -13,6 +13,7 @@ class UserRegister(generics.CreateAPIView):
 
 
 class UserLogin(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserLoginSerializer
 
