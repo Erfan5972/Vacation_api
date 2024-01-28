@@ -3,9 +3,10 @@ from . import views
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('vacation', views.VacationViewSet)
-router.register('vacation-response', views.VacationResponseViewSet)
+router.register('vacation', views.VacationViewSet, basename='create-vacation')
+router.register('vacation-response', views.VacationResponseViewSet, basename='create-vacation-response')
 
+app_name = 'vacation'
 urlpatterns = [
     path('', include(router.urls))
 ]

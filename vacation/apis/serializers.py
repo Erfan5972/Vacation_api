@@ -29,6 +29,7 @@ class VacationResponseSerializer(serializers.ModelSerializer):
                   ]
 
     def get_validate_status(self, obj):
+
         status = obj.status
         vacation = obj.vacation
         node = obj.node
@@ -97,7 +98,7 @@ class VacationSerializer(serializers.ModelSerializer):
         role = obj.user.role
 
         if role == 'E':
-            node_connections = NodeConnection.objects.filter(from_node=1).first()
+            node_connections = NodeConnection.objects.get(from_node=1)
             vacation_response = VacationResponse(
                     vacation=obj,
                     node=node_connections.to_node,
@@ -107,7 +108,7 @@ class VacationSerializer(serializers.ModelSerializer):
             vacation_responses.append(vacation_response)
 
         if role == 'T':
-            node_connections = NodeConnection.objects.filter(from_node=2).first()
+            node_connections = NodeConnection.objects.get(from_node=2)
             vacation_response = VacationResponse(
                     vacation=obj,
                     node=node_connections.to_node,

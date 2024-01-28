@@ -6,6 +6,7 @@ router = DefaultRouter()
 router.register('node', views.NodeViewSet)
 router.register('node-connection', views.NodeConnectionViewSet)
 
+app_name = 'node'
 urlpatterns = [
     path('', include(router.urls))
 ]

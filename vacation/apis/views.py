@@ -9,7 +9,7 @@ from ..permissions import CanCreateVacationResponse
 class VacationViewSet(viewsets.ModelViewSet):
     queryset = Vacation.objects.all()
     serializer_class = VacationSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
 
 class VacationResponseViewSet(viewsets.ModelViewSet):
