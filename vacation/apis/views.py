@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .serializers import VacationSerializer, VacationResponseSerializer
 from .. models import Vacation, VacationResponse
+from ..permissions import CanCreateVacationResponse
 
 
 class VacationViewSet(viewsets.ModelViewSet):
@@ -14,4 +15,4 @@ class VacationViewSet(viewsets.ModelViewSet):
 class VacationResponseViewSet(viewsets.ModelViewSet):
     queryset = VacationResponse.objects.all()
     serializer_class = VacationResponseSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, CanCreateVacationResponse]

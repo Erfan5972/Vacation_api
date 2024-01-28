@@ -34,15 +34,27 @@ class VacationResponseSerializer(serializers.ModelSerializer):
         node = obj.node
         if status == 'F':
             if vacation.status == 'P':
-                vacation.status = 'F'
-                vacation.save()
-                srz_data = VacationForVacationResponseSerializer(instance=vacation)
-                return srz_data.data
+                if node.is_final == True:
+                    node_connection = NodeConnection.objects.filter(to_node=node).first()
+                    log = VacationResponse.objects.filter(vacation=vacation,
+                                                          status='P',
+                                                          node=node_connection.from_node)
+                    if log.exists():
+                        vacation.status = 'F'
+                        vacation.save()
+                        srz_data = VacationForVacationResponseSerializer(instance=vacation)
+                        return srz_data.data
+                    raise ValidationError('The technical manager has not yet confirmed this vacation')
+                else:
+                    vacation.status = 'F'
+                    vacation.save()
+                    srz_data = VacationForVacationResponseSerializer(instance=vacation)
+                    return srz_data.data
             raise ValidationError('this vacation has been answered before')
         if status == 'T':
             if vacation.status == 'P':
                 if node.is_final == True:
-                    node_connection = NodeConnection.objects.filter(to_node=node)
+                    node_connection = NodeConnection.objects.filter(to_node=node).first()
                     log = VacationResponse.objects.filter(vacation=vacation,
                                                           status='P',
                                                           node=node_connection.from_node)
@@ -51,6 +63,7 @@ class VacationResponseSerializer(serializers.ModelSerializer):
                         vacation.save()
                         srz_data = VacationForVacationResponseSerializer(instance=vacation)
                         return srz_data.data
+                    return None
                 else:
                     node_connection = NodeConnection.objects.get(from_node=node)
                     vacation_response = VacationResponse.objects.create(vacation=obj.vacation,
@@ -59,7 +72,7 @@ class VacationResponseSerializer(serializers.ModelSerializer):
                                                                         )
                     data = VacationResponseForVacationSerializer(vacation_response).data
                     return data
-        raise ValidationError('this vacation has been answered before')
+            raise ValidationError('this vacation has been answered before')
 
 
 class VacationSerializer(serializers.ModelSerializer):
@@ -84,26 +97,24 @@ class VacationSerializer(serializers.ModelSerializer):
         role = obj.user.role
 
         if role == 'E':
-            node_connections = NodeConnection.objects.filter(from_node=1)
-            for node_connection in node_connections:
-                vacation_response = VacationResponse(
+            node_connections = NodeConnection.objects.filter(from_node=1).first()
+            vacation_response = VacationResponse(
                     vacation=obj,
-                    node=node_connection.to_node,
+                    node=node_connections.to_node,
                     status='P'
                 )
-                vacation_response.save()
-                vacation_responses.append(vacation_response)
+            vacation_response.save()
+            vacation_responses.append(vacation_response)
 
         if role == 'T':
-            node_connections = NodeConnection.objects.filter(from_node=2)
-            for node_connection in node_connections:
-                vacation_response = VacationResponse(
+            node_connections = NodeConnection.objects.filter(from_node=2).first()
+            vacation_response = VacationResponse(
                     vacation=obj,
-                    node=node_connection.to_node,
+                    node=node_connections.to_node,
                     status='P'
                 )
-                vacation_response.save()
-                vacation_responses.append(vacation_response)
+            vacation_response.save()
+            vacation_responses.append(vacation_response)
 
         if role == 'M':
             raise ValidationError('you are manager and you cant create a vacation')
