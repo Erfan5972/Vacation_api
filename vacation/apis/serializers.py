@@ -129,28 +129,35 @@ class VacationCreateSerializer(serializers.ModelSerializer):
         vacation_responses = []
         role = obj.user.role
         if role == 'E':
-            node_connections = NodeConnection.objects.get(from_node=1)
-            vacation_response = VacationResponse(
-                        vacation=obj,
-                        node=node_connections.to_node,
-                        status='P'
-                    )
-            vacation_response.save()
-            vacation_responses.append(vacation_response)
+            try:
+                node_connections = NodeConnection.objects.filter(from_node=1).first()
+            except NodeConnection.DoesNotExist:
+                raise ValidationError('this node connection does not exist')
+            if node_connections:
+                vacation_response = VacationResponse(
+                            vacation=obj,
+                            node=node_connections.to_node,
+                            status='P'
+                        )
+                vacation_response.save()
+                vacation_responses.append(vacation_response)
 
         if role == 'T':
-            node_connections = NodeConnection.objects.get(from_node=2)
-            vacation_response = VacationResponse(
-                        vacation=obj,
-                        node=node_connections.to_node,
-                        status='P'
-                    )
-            vacation_response.save()
-            vacation_responses.append(vacation_response)
+            try:
+                node_connections = NodeConnection.objects.filter(from_node=2).first()
+            except NodeConnection.DoesNotExist:
+                raise ValidationError('this node connection does not exist')
+            if node_connections:
+                vacation_response = VacationResponse(
+                            vacation=obj,
+                            node=node_connections.to_node,
+                            status='P'
+                        )
+                vacation_response.save()
+                vacation_responses.append(vacation_response)
 
         if role == 'M':
             raise ValidationError('you are manager and you cant create a vacation')
-        print(vacation_responses)
         return VacationResponseListSerializer(vacation_responses, many=True).data
 
 
