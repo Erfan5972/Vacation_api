@@ -14,7 +14,7 @@ class Vacation(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=1, choices=CHOICES, default='P', null=True, blank=True)
+    status = models.CharField(max_length=1, choices=CHOICES, default='P')
 
 
 class VacationResponse(models.Model):

@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include('node.apis.urls', namespace='node')),
-    path('api/', include('vacation.apis.urls', namespace='vacation')),
+    path('api/vacation/', include('vacation.apis.urls', namespace='vacation')),
     path('api/user/', include('user.apis.urls', namespace='user'))
 
 

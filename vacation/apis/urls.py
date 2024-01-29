@@ -1,12 +1,14 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
-from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
-router.register('vacation', views.VacationViewSet, basename='create-vacation')
-router.register('vacation-response', views.VacationResponseViewSet, basename='create-vacation-response')
 
 app_name = 'vacation'
 urlpatterns = [
-    path('', include(router.urls))
+    path('', views.VacationCreateView.as_view(), name='create'),
+    path('list/', views.VacationListView.as_view(), name='list'),
+    path('<int:pk>/', views.VacationRetrieveView.as_view(), name='update-destroy-retrieve'),
+    path('response/', views.VacationResponseCreateView.as_view(), name='response-create'),
+    path('response/list/', views.VacationResponseListView.as_view(), name='response-list'),
+    path('response/<int:pk>/', views.VacationResponseRetrieveView.as_view(), name='response-update-destroy-retrieve'),
+
 ]
